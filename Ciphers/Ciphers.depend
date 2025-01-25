@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1737810213 source:/home/barbora/Documents/Crypto/Ciphers/main.c
+	<stdio.h>
+	<stdlib.h>
+
