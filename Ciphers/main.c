@@ -1,22 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_PATH_SIZE 100
 #define MAX_SELECTION_SIZE 10
+#define MAX_LINE_LEN 150
 
+typedef struct {
+    int top;
+    char* string;
+}dynamicString;
 
-int pathPrompt();
+dynamicString* getDynamicString();
+
+char* pathPrompt();
 int accessCheck(char*);
+
+char* readFile(char*);
+dynamicString* resizeStringWithNewline(dynamicString*, int);
 
 void cipherPromptText(char**, int);
 int cipherPrompt();
 int cipherSelectionCheck(char* , int);
 
 char* encrypt(char*, int);
-char* encryptCaesar(char*)
+
+char* encryptCaesar(char*);
+int isLetter (char);
 
 int generateRandNum(int);
+
+void encryptionProgram();
 
 
 
@@ -24,13 +39,28 @@ int generateRandNum(int);
 
 int main()
 {
-    int res = pathPrompt();
-    res = cipherPrompt();
+    encryptionProgram();
     return 0;
 }
 
+//top = 1 => v array je top -1 mist => v arrayi je 0 mist => array je NULL
+//top = 5 => 4 mista => array[0] az array[3]
 
-char* pathPrompt ()
+dynamicString* getDynamicString()
+{
+    dynamicString* array = malloc(sizeof(dynamicString));
+    if(array == NULL)
+    {
+        fprintf(stderr, "Error allocating memory for dynamic string\n");
+        return NULL;
+    }
+    array->string = NULL;
+    array->top = 1;
+    return array;
+}
+
+
+char* pathPrompt()
 {
     char path[MAX_PATH_SIZE];
     char* plaintext;
@@ -39,7 +69,7 @@ char* pathPrompt ()
         printf("Enter file path:\n");
         if(fgets(path, MAX_PATH_SIZE, stdin) == NULL)
         {
-            perror("Error reading file: ");
+            fprintf(stderr, "Error reading input\n");
             return NULL;
         }
         plaintext = readFile(plaintext);
@@ -57,13 +87,45 @@ char* readFile(char* path)
         return NULL;
     }
 
+    char lineBuffer[MAX_LINE_LEN];
+    dynamicString* plaintext = getDynamicString();
+    int lineCount = 0;
 
+    while(fgets(lineBuffer,MAX_LINE_LEN,file))
+    {
+        while((strlen(plaintext->string) + (strlen(lineBuffer))) > (plaintext->top - 1))
+        {
+            plaintext = resizeStringWithNewline(plaintext, lineCount + 1);
+            if(plaintext == NULL)
+            {
+                return NULL;
+            }
+        }
+        strcat(plaintext->string, strcat(lineBuffer, "\n"));
+        lineCount++;
+    }
 
+    fclose(file);
+    return plaintext->string;
 }
+
+
+dynamicString* resizeStringWithNewline(dynamicString* plaintext, int lineCount)
+{
+    plaintext->top *= 2;
+    dynamicString* newPlaintext = realloc(plaintext->string, (sizeof(char) * plaintext->top) + lineCount);
+
+    if (newPlaintext == NULL)
+    {
+        fprintf(stderr, "Error reallocating memory for dynamic array\n");
+    }
+
+    return newPlaintext;
+}
+
 
 void cipherPromptText(char* ciphers[], int ciphersSize)
 {
-
     printf("Please select a cipher:\n");
     for(int i = 0; i < ciphersSize; i++)
     {
@@ -81,9 +143,8 @@ int cipherPrompt()
     do
     {
         cipherPromptText(ciphers, ciphersSize);
-        if(fgets(input, (ciphersSize/10) + 10, stdin) == NULL)
+        if(fgets(input, (ciphersSize/10) + 2, stdin) == NULL)
         {
-            perror("Error reading input: ");
             return -1;
         }
         input[strcspn(input, "\n")] = 0;
@@ -111,9 +172,9 @@ int cipherSelectionCheck(char input[], int ciphersSize)
     return selection;
 }
 
-char* encrypt(char plaintext[], int cipher)
+char* encrypt(char* plaintext, int cipher)
 {
-    char cipherText[] = NULL;
+    char* cipherText = NULL;
     switch (cipher)
     {
         case 0:
@@ -122,7 +183,6 @@ char* encrypt(char plaintext[], int cipher)
     }
     return cipherText;
 }
-
 
 char* encryptCaesar(char plaintext[])
 {
@@ -133,11 +193,21 @@ char* encryptCaesar(char plaintext[])
 
     for(int i = 0; plaintext[i] != '\0'; i++)
     {
-        cipherText[i] = plaintext[i] + randomNumber;
+        cipherText[i] = isLetter(cipherText[i]) == 0 ? (char) (plaintext[i] + randomNumber) : plaintext[i];
     }
     return cipherText;
 }
 
+    //otestovat a dodelat pres ternary
+int isLetter (char c)
+{
+    int value = c;
+    if(((value > 64) && (value < 91)) || ((c >= 'a') && (c <= 'z')))
+    {
+        return 0;
+    }
+    return -1;
+}
 
 int generateRandNum(int max)
 {
@@ -147,3 +217,8 @@ int generateRandNum(int max)
     return (random() % (max + 1));
 }
 
+void encryptionProgram()
+{
+    char* plaintext = pathPrompt();
+    printf("Ciphertext:\n\n%s\n", encrypt(plaintext, cipherPrompt()));
+}
