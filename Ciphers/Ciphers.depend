@@ -1,25 +1,26 @@
 # depslib dependency file v1.0
-1738526795 source:/home/barbora/Documents/Crypto/Ciphers/main.c
+1738572501 source:/home/barbora/Documents/Crypto/Ciphers/main.c
 	"file_reader.h"
 	"encryption_program.h"
 	"caesar.h"
 
-1738523246 source:/home/barbora/Documents/Crypto/Ciphers/caesar.c
+1738527438 source:/home/barbora/Documents/Crypto/Ciphers/caesar.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<time.h>
 	"caesar.h"
 
-1738524101 source:/home/barbora/Documents/Crypto/Ciphers/encryption_program.c
+1738570957 source:/home/barbora/Documents/Crypto/Ciphers/encryption_program.c
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	"encryption_program.h"
 	"file_reader.h"
 	"caesar.h"
+	"file_writer.h"
 
-1738524155 source:/home/barbora/Documents/Crypto/Ciphers/file_reader.c
+1738571950 source:/home/barbora/Documents/Crypto/Ciphers/file_reader.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -30,4 +31,12 @@
 1738527387 /home/barbora/Documents/Crypto/Ciphers/caesar.h
 
 1738523860 /home/barbora/Documents/Crypto/Ciphers/encryption_program.h
+
+1738570903 /home/barbora/Documents/Crypto/Ciphers/file_writer.h
+
+1738576588 source:/home/barbora/Documents/Crypto/Ciphers/file_writer.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"file_writer.h"
 

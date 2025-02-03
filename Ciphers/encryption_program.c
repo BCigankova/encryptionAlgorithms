@@ -4,6 +4,7 @@
 #include "encryption_program.h"
 #include "file_reader.h"
 #include "caesar.h"
+#include "file_writer.h"
 
 void cipherPromptText(char* ciphers[], int ciphersSize)
 {
@@ -24,7 +25,7 @@ int cipherPrompt()
     do
     {
         cipherPromptText(ciphers, ciphersSize);
-        if(fgets(input, (ciphersSize/10) + 2, stdin) == NULL)
+        if(fgets(input, (ciphersSize/10) + 3, stdin) == NULL)
         {
             return -1;
         }
@@ -56,7 +57,9 @@ int cipherSelectionCheck(char input[], int ciphersSize)
 void encryptionProgram()
 {
     char* plaintext = pathPrompt();
-    printf("Ciphertext:\n\n%s\n", encrypt(plaintext, cipherPrompt()));
+    char* ciphertext = encrypt(plaintext, cipherPrompt());
+    printf("Ciphertext:\n\n%s\n", ciphertext);
+    fileWriterPrompt(ciphertext);
 }
 
 char* encrypt(char* plaintext, int cipher)

@@ -27,7 +27,7 @@ char* readFile(char* path)
     FILE* file = fopen(path, "r");
     if(file == NULL)
     {
-        printf("Please input a valid path, inserted: \n%s\n", path);
+        printf("Please input a valid path");
         return NULL;
     }
     char lineBuffer[MAX_LINE_LEN];
